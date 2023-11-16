@@ -5,6 +5,7 @@
     box-sizing: border-box;
     text-decoration: none;
     outline: none;
+    list-style: none;
 }
 :root{
     --blue-light: #8FB2F5;
@@ -84,6 +85,7 @@ body{
     display: flex;
     gap: 10px;
     align-items: center;
+    font-family: var(--Nunito);
 }
 .input input {
     width: 100%;
@@ -96,10 +98,12 @@ body{
     font-family: var(--Nunito);
     font-size: 18px;
 }
-#all-contry {
-    width: 100px;
-    height: 60px;
+.select-country {
+    width: 350px;
+    min-height: 60px;
     display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     background-color: var(--gray-600);
     border-radius: 8px;
@@ -111,14 +115,102 @@ body{
     padding: 5px;
     position: relative;
     cursor: pointer;
+    gap: 10px;
+}
+.select-country li{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 0px;
+}
+.fa-caret-down{
+    rotate: -90deg;
+    transition: 0.3s ease-in-out;
+}
+.rotateArrow{
+    rotate: 0deg;
+}
+.dropDown{
+    display: none;
+    position: absolute;
+    z-index: 3;
+}
+.dropDown ol{
+    width: 300px;
+    height: 300px;
+    background-color: var(--gray-600);
+    border-radius: 8px;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.40);
+    overflow-y: scroll;
+}
+.dropDown ol::-webkit-scrollbar{
+    width: 5px;
+}
+.dropDown ol::-webkit-scrollbar-thumb{
+    background-color: var(--gray-400);
+    border-radius: 4px;
+}
+.dropDown ol li{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    padding: 10px 10px;
+    font-family: var(--Nunito);
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    gap: 10px;
+    color: var(--gray-200);
+}
+.dropDown ol li:hover{
+    background-color: var(--gray-500);
 }
 .country-flag{
-    height: 74px;
+    height: 22px;
+    width: 30px;
+    border-radius: 2px;
 }
+
 .submitBtn{
-    width: 150px;
+    width: 200px;
     height: 60px;
     cursor: pointer;  
     border-radius: 8px;
-    font-family: var(--Nunito);
+    line-height: 25px;
+    font-weight: 600;
+    background: var(--blue-light) !important;
 }
+.submitBtn::first-letter{
+    text-transform: uppercase;
+}
+.search-list{
+    width: 100%;
+    background-color: var(--gray-500);
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    align-items: start;
+    font-family: var(--Nunito);
+    box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.40);
+    margin-top: 5px;
+}
+.search-list li{
+    display: flex;
+    padding: 16px 20px;
+    color: var(--gray-100);
+    border-bottom: solid 2px var(--gray-600);
+    width: 100%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.search-list li:hover{
+    background-color: var(--gray-300);
+}
+

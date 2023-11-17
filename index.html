@@ -18,7 +18,7 @@
     <title>Weather APP</title>
 </head>
 <body background="img/Background.png">
-    <div class="busca">
+    <div class="busca" style="display: none;">
         <div class="logo">
             <a href="#">
                 <svg xmlns="http://www.w3.org/2000/svg" width="171" height="24" viewBox="0 0 171 24" fill="none">
@@ -50,7 +50,7 @@
                             <p>Select Country</p>
                             <i class="fa-solid fa-caret-down"></i>
                         </div>
-                        <input type="text" placeholder="Search location" id="searchLocation">
+                        <input type="text" placeholder="Search location" class="searchLocation" >
                         <button class="bttn-pill bttn-md bttn-primary submitBtn">forecast</button>
                     </div>
                     <div class="dropDown">
@@ -62,7 +62,42 @@
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="Dash">
+        <div class="Card">
+            <nav>
+                <div class="home-Btn" title="Home">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="16" viewBox="0 0 24 16" fill="none">
+                    <path d="M18.132 15.8243C17.2752 15.8243 16.7473 15.4286 15.8847 14.9627C15.0221 14.4968 12.5275 12.6209 12.5275 10.2858C12.5275 8.70168 12.1191 7.42044 11.4237 6.39938C10.7335 5.38615 9.79838 4.68416 8.82561 4.18863C8.35684 3.94989 7.86903 3.75465 7.38328 3.59329C7.10011 3.4993 6.93577 3.19523 7.05865 2.9234C7.83736 1.19945 9.57162 0 11.5862 0C14.3285 0 16.5518 2.2231 16.5518 4.96554C16.5518 5.55225 16.45 6.11528 16.2632 6.63775C17.0547 6.10434 18.0083 5.79307 19.0345 5.79307C21.7769 5.79307 23.9999 8.01617 23.9999 10.7586C23.9999 14.0601 21.0988 15.8243 18.132 15.8243Z" fill="#8FB2F5"/>
+                    <path d="M0 10.3449C0 12.9623 1.72564 15.1432 4.01169 15.6251C4.36454 15.754 4.74548 15.8243 5.14288 15.8243H12.8578C13.1166 15.8243 13.2292 15.4783 13.0317 15.3111C11.6834 14.1703 10.6814 12.5625 10.6814 10.2858C10.6814 9.03484 10.3646 8.12373 9.89789 7.43878C9.4259 6.74594 8.76207 6.22811 7.98771 5.83356C7.20615 5.4355 6.35766 5.18192 5.54738 5.00216C5.35654 4.97808 5.16232 4.96558 4.96555 4.96558C2.2231 4.96558 0 7.374 0 10.3449Z" fill="#8FB2F5"/>
+                    </svg>
+                </div>
+                <div class="search"><input type="text" placeholder="Search location"></div>
+            </nav>
+            <div class="main">
+                <div class="background" style="background: url(img/Night-background/2.png); background-repeat: no-repeat; background-size: cover;">
+                    <div class="info">
+                        <div class="cityAndCountry">
+                            <div class="nameCuntryAndCity">
+                                <p>Uzice/Serbia</p>
+                                <img src="https://countryflagsapi.netlify.app/flag/RS.svg" alt="" title="Country name">
+                            </div>
+                            <div class="date">
+                                <p>Segunda-feira, 15 de maio de 2023</p>   
+                            </div>
+                        </div>
+                        <div class="time">
+                            21:39
+                        </div>
+                    </div>
+                    <div class="temperature"></div>
+                </div>
+            </div>
+        </div>
+        <div class="weather-info">
+            <div class="detals"></div>
+            <div class="days"></div>
+        </div>
     </div>
 </body>
 </html>

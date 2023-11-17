@@ -25,14 +25,12 @@ $.ajax({
             }
 
         })
-        $("#all-contry").change(function (e) { 
-            let contry = $(this).val()
-                                .split("-")  
-            $('.country-flag').attr('src', `https://flagsapi.com/${contry[1].toUpperCase()}/flat/64.png`)           
-        });
     }
 });
 $('.dropDown ol').click(function(event) {
+    if($('.search-bar > p').length === 1){
+        $('.search-bar > p').remove();
+    }
     let thisElemnet = event.target;
     
     if($(thisElemnet).hasClass('country-flag')){
@@ -49,18 +47,25 @@ $('.dropDown ol').click(function(event) {
         url: 'https://countriesnow.space/api/v0.1/countries',
         success: (response) => {
             let data = response.data;
-
             let contryValue = $('.select-country li').text();
             let findCountry = data.find(singleElement => singleElement['country'] === contryValue);
             let citys = findCountry.cities
-            $('#searchLocation').val("");
-                $('.search-list').html("")
-    
-                $('#searchLocation').on('input', function(){
-                    let inputValue = $(this).val().split(' ')
-                    inputValue = inputValue.map(singleElemnet => singleElemnet[0].toUpperCase() + singleElemnet.slice(1).toLowerCase()).join(" ")
+            
+            $('.searchLocation').val("");
+            $('.search-list').html("")
+
+                $('.searchLocation').on('input', function(){
+                    let inputValue = $(this).val();
+
+                    inputValue.length === 0 ? $('.search-list').hide() : $('.search-list').show();
+
+                    inputValue = inputValue.split(' ')
+                                            .map(singleElemnet => singleElemnet[0].toUpperCase() + singleElemnet.slice(1).toLowerCase())
+                                            .join(" ")
+                                            
     
                     let filterCity = citys.filter(singleCity => singleCity.includes(inputValue))
+                   
                     if(filterCity.length > 0){
                         filterCity = filterCity.slice(0, 5);
                         $('.search-list').html("")
@@ -75,10 +80,56 @@ $('.dropDown ol').click(function(event) {
     })
 });
 
-$('.search-list').click((event) => {
+
+$('.search-list').click(eventAndreturnCityName)
+
+function eventAndreturnCityName(event){
     let city = event.target;
-    $('#searchLocation').val($(city).text());
-    $('.search-list').text("")
-})
+    $('.searchLocation').val($(city).text());
+    $('.search-list').text("");
+
+}
+
+
+$('.submitBtn').click(() => {
+    // Validation
+    if($('.select-country').text().includes('Select Country')){
+        if($('.input').prev().length !== 1){
+            $('.search-bar').prepend('<p>must select a country</p>');
+            $('.search-bar > p').addClass('animate__animated animate__shakeX');
+        }
+    }else if($('.searchLocation').val().length === 0){
+        $('.search-bar').prepend('<p>must write the name of city</p>');
+            $('.search-bar > p').addClass('animate__animated animate__shakeX');
+    }else{
+        if($('.search-bar > p').length === 1){
+            $('.search-bar > p').remove();
+        }
+        let searchCity = $('.searchLocation').val()
+        searchCity = searchCity.split(' ')
+                                .map(singleElemnet => singleElemnet[0].toUpperCase() + singleElemnet.slice(1).toLowerCase())
+                                .join(" ")
+
+        
+        $.ajax({
+            type: 'GET',
+            url: 'http://api.weatherapi.com/v1/forecast.json',
+            data: {
+                key: '78b424624d9c4ee2a9f75055231211',
+                q: searchCity,
+                days: '5',
+                aqi: 'no',
+                alerts: 'no'
+            },
+            success: (response) => {
+                let localTime = response.location.localtime
+                
+                console.log(localTime)
+            }
+        })
+        // $('.busca').hide()
+        $('body').css('background', 'var(--gray-900)')
+    }
+});
 
 

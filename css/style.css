@@ -80,6 +80,14 @@ body{
     max-width: 724px;
     width: 100%;
 }
+.search-bar > p{
+    display: flex; 
+    justify-content: center;
+    color: red;
+    font-family: var(--Nunito);
+    font-size: 20px;
+    margin-bottom: 5px;
+}
 .input{
     width: 100%;
     display: flex;
@@ -214,3 +222,112 @@ body{
     background-color: var(--gray-300);
 }
 
+.Dash{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    max-width: 100%;
+    height: 100vh;
+}
+.Card{
+    background-color: var(--gray-800);
+    border-radius: 12px;
+    display: flex;
+    padding: 16px;
+    flex-direction: column;
+    gap: 16px;
+}
+.Card nav{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+nav .home-Btn{
+    width: 56px;
+    height: 56px;
+    display: flex;
+    background-color: var(--gray-600);
+    border-radius: 8px;
+    padding: 8px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.home-Btn svg{
+    width: 40px;
+    height: 40px;
+    opacity: 0.8;
+    padding: 10px 5px 10.22px 5px;
+}
+nav .home-Btn:hover{
+    background-color: var(--gray-500);
+}
+.search{
+    width: 100%;
+    height: 56px;
+}
+.search input{
+    font-family: var(--Nunito);
+    height: 100%;
+    width: 100%;
+    padding: 0 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--gray-600);
+    color: var(--gray-400);
+    letter-spacing: 0.5px;
+    font-size: 16px;
+    font-weight: 600;
+}
+.main{
+    width: 100%;
+    height: 100%;
+}
+.background{
+    width: 632px;
+    height: 616px;
+    border-radius: 8px;
+    padding: 32px;
+    font-family: var(--Nunito);
+}
+.cityAndCountry img{
+    width: 50px;
+    height: 25px;
+    cursor: pointer;
+}
+.cityAndCountry{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.info{
+    display: flex;
+    justify-content: space-between;
+    color: var(--gray-100);
+}
+.nameCuntryAndCity{
+    display: flex;
+
+}
+.nameCuntryAndCity p{
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 140%;
+    text-align: center;
+}
+.date p{
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 140%;
+}
+.time{
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 140%;
+}
+.weather-info{
+    background-color: green;
+    width: 664px;
+    height: 600px;
+}

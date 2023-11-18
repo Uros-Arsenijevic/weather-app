@@ -22,11 +22,16 @@ $.ajax({
                         .appendTo(createOption);
 
                 $('.dropDown ol').append(createOption)
+
             }
 
         })
+        setTimeout(() => {
+            $.busyLoadFull("hide");
+        }, 1500)
     }
-});
+})
+$("body").busyLoad("show", { spinner: "circles", background: 'var(--blue-light)'});
 $('.dropDown ol').click(function(event) {
     if($('.search-bar > p').length === 1){
         $('.search-bar > p').remove();
@@ -122,14 +127,54 @@ $('.submitBtn').click(() => {
                 alerts: 'no'
             },
             success: (response) => {
-                let localTime = response.location.localtime
-                
-                console.log(localTime)
+
+                // add flag
+                $.ajax({
+                    type: "GET",
+                    url: "https://flagcdn.com/en/codes.json",
+                    success: function (allcountrys) {
+                        let countryCode = Object.keys(allcountrys);
+                        countryCode.forEach(singleCountry => {
+                            if(allcountrys[singleCountry] === response.location.country){
+                                // add flag
+                                $('.nameCuntryAndCity img').attr({
+                                    src: `https://countryflagsapi.netlify.app/flag/${singleCountry.toUpperCase()}.svg`, 
+                                    title: $('.select-country li').text()
+                                })
+                                                            
+                            }
+
+                        })
+                    }
+                });
+                console.log(response.forecast)
+
+                // add time
+                let localTime = response.location.localtime;
+                localTime = localTime.split(' ');
+                $('.time').text(localTime[1]);
+
+                let currentForecast = response.current.condition.text;
+                // add courrend forcast
+                $('.MaxAndMinTemp p:last').text(currentForecast)
+
+
+
+                // add Temperature
+                let temperature = response.current.temp_c;  
+                $('.temp h3').html(`${Math.round(temperature)}&deg;c`);
+
+                // add name city and county
+                $('.nameCuntryAndCity p').text(`${response.location.name}/${response.location.country}`);
+               
+
+                $('.busca').hide()
+                $('body').css('background', 'var(--gray-900)')
+                $('.Dash').css({display: 'flex'})
+
+                $('.Card').addClass('fadeInRight')
+                $('.detals, .days').addClass(" animate__fadeIn")
             }
         })
-        // $('.busca').hide()
-        $('body').css('background', 'var(--gray-900)')
     }
 });
-
-

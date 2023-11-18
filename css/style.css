@@ -21,6 +21,9 @@
     --white: #FFFFFF;
     --Nunito: Nunito;
 }
+*::selection{
+    background-color: var(--blue-light);
+}
 body{
     background-size: cover;
     background-repeat: no-repeat;
@@ -223,13 +226,29 @@ body{
 }
 
 .Dash{
-    display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: 24px;
     max-width: 100%;
     height: 100vh;
+    flex-wrap: wrap;
+    display: none;
 }
+.fadeInRight{
+    animation: fadeInRight 0.6s ease-in-out forwards;
+}
+
+@keyframes fadeInRight {
+    0%{
+        transform: translateX(200px);
+        opacity: 0; 
+    }
+    100%{
+       transform: translateX(0px);
+        opacity: 1;
+    }
+}
+
 .Card{
     background-color: var(--gray-800);
     border-radius: 12px;
@@ -237,6 +256,8 @@ body{
     padding: 16px;
     flex-direction: column;
     gap: 16px;
+    width: 50%;
+    height: 100%;
 }
 .Card nav{
     display: flex;
@@ -285,16 +306,14 @@ nav .home-Btn:hover{
     height: 100%;
 }
 .background{
-    width: 632px;
-    height: 616px;
+    width: 100%;
+    height: 100%;
     border-radius: 8px;
     padding: 32px;
     font-family: var(--Nunito);
-}
-.cityAndCountry img{
-    width: 50px;
-    height: 25px;
-    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .cityAndCountry{
     display: flex;
@@ -308,26 +327,176 @@ nav .home-Btn:hover{
 }
 .nameCuntryAndCity{
     display: flex;
-
+    align-items: center;
+    gap: 12px;
 }
 .nameCuntryAndCity p{
-    font-size: 25px;
+    font-size: 40px;
     font-weight: 700;
     line-height: 140%;
     text-align: center;
 }
+.nameCuntryAndCity img{
+    width: 70px;
+    height: 48px;
+    cursor: pointer;
+    border-radius: 5px;
+}
 .date p{
-    font-size: 1rem;
+    font-size: 20px;
     font-weight: 400;
     line-height: 140%;
 }
 .time{
-    font-size: 20px;
+    font-size: 30px;
     font-weight: 700;
     line-height: 140%;
 }
+.temperature{
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    color: var(--white);
+}
+.cont1{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.MaxAndMinTemp{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.MaxAndMinTemp p{
+    font-size: 30px;
+    line-height: 140%;
+}
+.MaxAndMinTemp p:first-child{
+    font-weight: 700;
+}
+.MaxAndMinTemp p:last-child{
+    font-weight: 400;
+}
+.cont2{
+    max-width: 400px;
+}
+.cont2 .img{
+    width: 308px;
+    height: 308px;
+    flex-shrink: 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.temp h3{
+    font-size: 150px;
+    font-weight: 800;
+    line-height: 100%;
+}
+
 .weather-info{
-    background-color: green;
-    width: 664px;
-    height: 600px;
+    width: 49%;
+    min-width: 600px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.detals{
+    width: 100%;
+    height: 55%;
+    padding: 28px 24px 8px 24px;
+}
+.days{
+    width: 100%;
+    height: 44%;
+}
+.detals,.days{
+    border-radius: 12px;
+    background-color: var(--gray-800);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-family: var(--Nunito);
+}
+.detals-hedding p, .days-hedding p{
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 140%;
+    color: var(--gray-400);
+}
+.today-detals, .detals-item li{
+    display: flex;
+    align-items: center;
+}
+.detals-item{
+    height: 100%;
+}
+.detals-item ol{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.detals-item li{
+    justify-content: space-between;
+    padding: 16px 0px;
+}
+.detals-item li:not(:last-child){
+    border-bottom: solid 1px var(--gray-700);
+}
+.today-detals{
+    gap: 12px;
+}
+.heddiong{
+    color: var(--gray-200);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 140%;
+    letter-spacing: 0.5px;
+}
+.days{
+    padding: 24px;
+    padding-top: 28px;
+    font-family: var(--Nunito);
+}
+.position-center{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+.all-Day{
+    display: flex;
+    width: 100%;
+
+}
+.Day{
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--gray-200);
+    gap: 12px;
+}
+.day-name, .day-name p{
+    font-size: 18px;
+}
+.day-name{
+    text-align: center;
+    font-weight: 700;
+    line-height: 140%;
+}
+.day-prognose{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.day-prognose > p{
+    font-weight: 400;
+    line-height: 140%;
+}
+.minAndMaxTemp{
+    display: flex;
+    gap: 8px;
 }

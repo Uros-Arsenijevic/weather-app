@@ -2,7 +2,6 @@ $('.select-country').click(() => {
     $('.fa-caret-down').toggleClass('rotateArrow');
     $('.dropDown').slideToggle(300);
 })
-
 $.ajax({
     type: "GET",
     url: "https://flagcdn.com/en/codes.json",
@@ -28,7 +27,7 @@ $.ajax({
         })
         setTimeout(() => {
             $.busyLoadFull("hide");
-        }, 1500)
+        }, 2000)
     }
 })
 $("body").busyLoad("show", { spinner: "circles", background: 'var(--blue-light)'});
@@ -135,7 +134,7 @@ $('.submitBtn').click(() => {
                     success: function (allcountrys) {
                         let countryCode = Object.keys(allcountrys);
                         countryCode.forEach(singleCountry => {
-                            if(allcountrys[singleCountry] === response.location.country){
+                            if(response.location.country.includes(allcountrys[singleCountry])){
                                 // add flag
                                 $('.nameCuntryAndCity img').attr({
                                     src: `https://countryflagsapi.netlify.app/flag/${singleCountry.toUpperCase()}.svg`, 
@@ -147,22 +146,39 @@ $('.submitBtn').click(() => {
                         })
                     }
                 });
-                console.log(response.forecast)
+                let prognoseAllDay = response.forecast.forecastday;                    
+                
+                let allDayInWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                let allMounth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                
+                prognoseAllDay.forEach((singleDay, index) => {
+                    let date = new Date(singleDay.date);
+                    if(index === 0){
+                        $('.date p').text(`${allDayInWeek[date.getDay()]}, ${allMounth[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`)
+                    }
+                    console.log($('.day-name').eq(index).text(allDayInWeek[date.getDay()]))
+                })
 
                 // add time
                 let localTime = response.location.localtime;
                 localTime = localTime.split(' ');
                 $('.time').text(localTime[1]);
 
-                let currentForecast = response.current.condition.text;
                 // add courrend forcast
+                let currentForecast = response.current.condition.text;
                 $('.MaxAndMinTemp p:last').text(currentForecast)
-
 
 
                 // add Temperature
                 let temperature = response.current.temp_c;  
                 $('.temp h3').html(`${Math.round(temperature)}&deg;c`);
+
+                // add max and min temp
+                let maxTemp = prognoseAllDay[0].day.maxtemp_c;
+                let minTemp = prognoseAllDay[0].day.mintemp_c;
+
+                $('.MaxAndMinTemp p:first').html(`${Math.round(maxTemp)}&deg;c / ${Math.round(minTemp)}&deg;c`);
+                
 
                 // add name city and county
                 $('.nameCuntryAndCity p').text(`${response.location.name}/${response.location.country}`);

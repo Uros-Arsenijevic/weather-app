@@ -98,6 +98,10 @@ body{
     align-items: center;
     font-family: var(--Nunito);
 }
+.fa-map-location-dot{
+    margin-right: 10px;
+    color: var(--gray-200);
+}
 .input input {
     width: 100%;
     padding: 0px 20px;
@@ -334,7 +338,7 @@ nav .home-Btn:hover{
     font-size: 40px;
     font-weight: 700;
     line-height: 140%;
-    text-align: center;
+    text-align: left;
 }
 .nameCuntryAndCity img{
     width: 70px;
@@ -381,12 +385,13 @@ nav .home-Btn:hover{
 .cont2{
     max-width: 400px;
 }
-.cont2 .img{
+.cont2 img{
     width: 308px;
     height: 308px;
     flex-shrink: 0;
     background-repeat: no-repeat;
     background-size: cover;
+    border-radius: 50%;
 }
 .temp h3{
     font-size: 150px;
@@ -478,6 +483,15 @@ nav .home-Btn:hover{
     align-items: center;
     color: var(--gray-200);
     gap: 12px;
+    border-radius: 8px;
+    padding-top: 5px;
+    transition: 0.2s;
+}
+.Day:hover{
+    background-color: var(--gray-700);
+}
+.Day:first-child{
+    background-color: var(--gray-700);
 }
 .day-name, .day-name p{
     font-size: 18px;
@@ -495,8 +509,19 @@ nav .home-Btn:hover{
 .day-prognose > p{
     font-weight: 400;
     line-height: 140%;
+    text-align: center;
+}
+.day-img img{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
 }
 .minAndMaxTemp{
     display: flex;
     gap: 8px;
+    justify-content: center;
+    font-weight: 700;
+}
+.Min-temp{
+    color: var(--gray-500);
 }

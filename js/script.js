@@ -104,7 +104,7 @@ $('.submitBtn').click(() => {
         }
     }else if($('.searchLocation').val().length === 0){
         $('.search-bar').prepend('<p>must write the name of city</p>');
-            $('.search-bar > p').addClass('animate__animated animate__shakeX');
+        $('.search-bar > p').addClass('animate__animated animate__shakeX');
     }else{
         if($('.search-bar > p').length === 1){
             $('.search-bar > p').remove();
@@ -113,11 +113,11 @@ $('.submitBtn').click(() => {
         
         $.ajax({
             type: 'GET',
-            url: 'http://api.weatherapi.com/v1/forecast.json',
+            url: 'http://api.weatherapi.com/v1/forecast.json', // API has a limit of 3 days only
             data: {
                 key: '78b424624d9c4ee2a9f75055231211',
                 q: searchCity,
-                days: '5',
+                days: "5",
                 aqi: 'no',
                 alerts: 'no'
             },
@@ -153,7 +153,7 @@ $('.submitBtn').click(() => {
                         $('.date p').text(`${allDayInWeek[date.getDay()]}, ${allMounth[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`)
                     }
 
-                    // Forecast for 5 days
+                    // Forecast for 3 days
                     $('.day-name').eq(index).text(allDayInWeek[date.getDay()]);
                     $('.day-prognose > p').eq(index).text(singleDay.day.condition.text)
                     $('.Max-temp').eq(index).html(`${Math.floor(singleDay.day.maxtemp_c)}&deg;c`);
@@ -186,10 +186,12 @@ $('.submitBtn').click(() => {
                         case 'Blowing snow':
                         case 'Blizzard':
                         case 'Light snow':
+                        case 'Light sleet':
                             $(element).attr('src', "img/icons/Snow-Day.svg");
                             break;
                         case 'Cloudy':
                         case 'Overcast':
+                        case 'Mist':
                             $(element).attr('src', "img/icons/Cloudy-Day.svg");
                             break;
                         case 'Heavy rain':
@@ -323,6 +325,7 @@ $('.submitBtn').click(() => {
                             break;
                         case 'Cloudy':
                         case 'Overcast':
+                        case 'Mist':
                             if(time >= 6 && time <= 18){
                                 $(element).attr('src', "img/icons/Cloudy-Day.svg");
                                 $('.background').css({
@@ -360,12 +363,12 @@ $('.submitBtn').click(() => {
                 }
 
 
-                $('.busca').hide()
-                $('body').css('background', 'var(--gray-900)')
-                $('.Dash').css({display: 'flex'})
+                $('.busca').hide();
+                $('body').css('background', 'var(--gray-900)');
+                $('.Dash').css({display: 'flex'});
 
-                $('.Card').addClass('fadeInRight')
-                $('.detals, .days').addClass(" animate__fadeIn")
+                $('.Card').addClass('fadeInRight');
+                $('.detals, .days').addClass(" animate__fadeIn");
             }
         })
     }

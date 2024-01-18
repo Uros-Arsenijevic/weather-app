@@ -113,7 +113,7 @@ $('.submitBtn').click(() => {
         
         $.ajax({
             type: 'GET',
-            url: 'http://api.weatherapi.com/v1/forecast.json', // API has a limit of 3 days only
+            url: 'https://api.weatherapi.com/v1/forecast.json', // API has a limit of 3 days only
             data: {
                 key: '78b424624d9c4ee2a9f75055231211',
                 q: searchCity,

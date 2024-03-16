@@ -1,14 +1,14 @@
-  /*
+/*
   TODO:
     1) rasporediti elemente po komponentama.
     2) uprostiti funkcional.
     3) preimenovati sve variable da to bude jasno.
     4) variable koje ne menjaju svoje znacenje u kodu promeniti na konstante.
-  */
-
+*/
 import { callApi } from "./callAPI.js";
+import { createListItem } from "./component/dropDownItem.js";
 
-$('.home-Btn').click(() => location.reload())
+$(".home-Btn").click(() => location.reload());
 
 $(".select-country").click(() => {
   $(".fa-caret-down").toggleClass("rotateArrow");
@@ -18,26 +18,11 @@ $(".select-country").click(() => {
 const getCountryCode = callApi("GET", "https://flagcdn.com/en/codes.json");
 
 getCountryCode.then((data) => {
-  const keys = Object.keys(data);
+  const countryCode = Object.keys(data);
 
-  keys.forEach((singleCountry) => {
-    singleCountry = singleCountry.split("-");
-
-    if (singleCountry.length === 2 || singleCountry[0] === "eu" || singleCountry[0] === "un"
-    ) {
-      return;
-    }
-    let countryFlagUrl = `https://countryflagsapi.netlify.app/flag/${singleCountry[0]}.svg`;
-    const element = `
-      <li>
-        ${data[singleCountry[0]]}
-        <img
-          class="country-flag"
-          src=${countryFlagUrl}
-        >
-      </li>
-    `;
-    $(".dropDown ol").append(element);
+  countryCode.forEach((singleCountry) => {
+    const createDropDownElement = createListItem(singleCountry, data);
+    $(".dropDown ol").append(createDropDownElement);
   });
   // shutdown loader
   setTimeout(() => {
@@ -52,70 +37,71 @@ $("body").busyLoad("show", {
 });
 
 $(".dropDown ol").click(function (event) {
-  // if ($(".search-bar > p").length === 1) {
-  //   $(".search-bar > p").remove();
-  // }
-  let thisElement = event.target;
+  let currentItem = event.target;
 
-  const hasClass = $(thisElement).hasClass("country-flag");
+  const hasClass = $(currentItem).hasClass("country-flag");
   if (hasClass) {
-    thisElement = thisElement.closest("li");
+    currentItem = currentItem.closest("li");
   }
 
-  let clone = $(thisElement).clone();
+  let clone = $(currentItem).clone();
 
   $(".select-country")
     .html(`<i class="fa-solid fa-caret-down"></i>`)
     .prepend(clone);
   $(".dropDown").slideToggle();
 
+  const getCities = callApi(
+    "GET",
+    "https://countriesnow.space/api/v0.1/countries"
+  );
 
-  $.ajax({
-    type: "GET",
-    url: "https://countriesnow.space/api/v0.1/countries",
-    success: (response) => {
-      let data = response.data;
-      let contryValue = $(".select-country li").text().trim();
-      let findCountry = data.find(
-        (singleElement) => singleElement["country"] === contryValue
+  getCities.then((response) => {
+    const data = response.data,
+      activeCountry = $(".select-country li").text().trim(),
+      findCountryInData = data.find(
+        (singleElement) => singleElement["country"] === activeCountry
+      ),
+      allCities = findCountryInData.cities;
+
+    $('.searchLocation').val("");
+    $(".search-list").html("");
+
+    $(".searchLocation").on("input", function () {
+      const cityName = $(this).val().toLowerCase();
+
+      if (cityName.length === 0) {
+        $(".search-list").hide();
+        return;
+      } else {
+        $(".search-list").show();
+      }
+
+      let findCity = allCities.filter((singleCity) =>
+        singleCity.toLowerCase().includes(cityName)
       );
-      let citys = findCountry.cities;
 
-      $(".searchLocation").val("");
-      $(".search-list").html("");
+      if (findCity.length > 0) {
+        const cutCities = findCity.slice(0, 5);
+        $('.search-list').html('');
 
-      $(".searchLocation").on("input", function () {
-        let inputValue = $(this).val();
+        cutCities.forEach((CityName) => {
+          const listItem = `<li class="border"><i class="fa-solid fa-map-location-dot"></i>${CityName}</li>`;
 
-        inputValue.length === 0
-          ? $(".search-list").hide()
-          : $(".search-list").show();
+          $(".search-list").append(listItem);
+        });
 
-        inputValue = inputValue
-          .split(" ")
-          .map(
-            (singleElemnet) =>
-              singleElemnet[0].toUpperCase() +
-              singleElemnet.slice(1).toLowerCase()
-          )
-          .join(" ");
-
-        let filterCity = citys.filter((singleCity) =>
-          singleCity.includes(inputValue)
-        );
-
-        if (filterCity.length > 0) {
-          filterCity = filterCity.slice(0, 5);
-          $(".search-list").html("");
-          filterCity.forEach((singleElement) => {
-            let listItem = `<li><i class="fa-solid fa-map-location-dot"></i>${singleElement}</li>`;
-            $(".search-list").append(listItem);
-          });
+        if(cutCities.length === 1){
+          $(".search-list li").removeClass('border')
         }
-      });
-    },
+      }
+
+    });
   });
 });
+// =============================================================
+
+
 
 $(".search-list").click(eventAndreturnCityName);
 
@@ -152,6 +138,7 @@ $(".submitBtn").click(() => {
         alerts: "no",
       },
       success: (response) => {
+        $(".searchLocation").val("");
         // add flag
         $.ajax({
           type: "GET",
@@ -249,6 +236,7 @@ $(".submitBtn").click(() => {
             case "Cloudy":
             case "Overcast":
             case "Mist":
+            case "Partly Cloudy":
               $(element).attr("src", "img/icons/Cloudy-Day.svg");
               break;
             case "Heavy rain":

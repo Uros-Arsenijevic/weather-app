@@ -102,6 +102,11 @@ body {
 .fa-map-location-dot {
   margin-right: 10px;
   color: var(--gray-200);
+  transition: 0.4s;
+  -webkit-transition: 0.4s;
+  -moz-transition: 0.4s;
+  -ms-transition: 0.4s;
+  -o-transition: 0.4s;
 }
 .input input {
   width: 100%;
@@ -226,14 +231,62 @@ body {
   width: 100%;
   cursor: pointer;
   transition: 0.2s;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  -webkit-transition: 0.2s;
+  -moz-transition: 0.2s;
+  -ms-transition: 0.2s;
+  -o-transition: 0.2s;
 }
-.border{
+.border {
   border-bottom: solid 2px var(--gray-600);
 }
-.search-list li:hover {
-  background-color: var(--gray-300);
+.search-list li::before {
+  content: "";
+  position: absolute;
+  left: -50%;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background-color: var(--gray-100);
+  transition: 0.5s;
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -ms-transition: 0.5s;
+  -o-transition: 0.5s;
 }
-
+.search-list li::after {
+  content: "";
+  position: absolute;
+  right: -50%;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background-color: var(--gray-100);
+  transition: 0.5s;
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -ms-transition: 0.5s;
+  -o-transition: 0.5s;
+}
+.search-list li span {
+  position: relative;
+  z-index: 1;
+}
+.search-list li:hover {
+  font-weight: bold;
+  color: var(--gray-800);
+}
+.search-list li:hover .fa-map-location-dot {
+  color: var(--gray-700);
+}
+.search-list li:hover:before {
+  left: 0;
+}
+.search-list li:hover:after {
+  right: 0;
+}
 .Dash {
   justify-content: space-between;
   align-items: center;

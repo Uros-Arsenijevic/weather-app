@@ -6,7 +6,7 @@
     4) variable koje ne menjaju svoje znacenje u kodu promeniti na konstante.
 */
 import { callApi } from "./callAPI.js";
-import { createListItem } from "./component/dropDownItem.js";
+import { createListItem } from "./components/dropDownItem.js";
 
 $(".home-Btn").click(() => location.reload());
 
@@ -18,12 +18,12 @@ $(".select-country").click(() => {
 const getCountryCode = callApi("GET", "https://flagcdn.com/en/codes.json");
 
 getCountryCode.then((data) => {
-  const countryCode = Object.keys(data);
-
-  countryCode.forEach((singleCountry) => {
-    const createDropDownElement = createListItem(singleCountry, data);
-    $(".dropDown ol").append(createDropDownElement);
+  
+  const allCounty = createListItem(data);
+  allCounty.forEach((singleCountry) => {
+    $(".dropDown ol").append(singleCountry);
   });
+
   // shutdown loader
   setTimeout(() => {
     $.busyLoadFull("hide");
@@ -64,7 +64,7 @@ $(".dropDown ol").click(function (event) {
       ),
       allCities = findCountryInData.cities;
 
-    $('.searchLocation').val("");
+    $(".searchLocation").val("");
     $(".search-list").html("");
 
     $(".searchLocation").on("input", function () {
@@ -83,25 +83,22 @@ $(".dropDown ol").click(function (event) {
 
       if (findCity.length > 0) {
         const cutCities = findCity.slice(0, 5);
-        $('.search-list').html('');
+        $(".search-list").html("");
 
         cutCities.forEach((CityName) => {
-          const listItem = `<li class="border"><i class="fa-solid fa-map-location-dot"></i>${CityName}</li>`;
+          const listItem = `<li class="border"><span><i class="fa-solid fa-map-location-dot"></i>${CityName}</span></li>`;
 
           $(".search-list").append(listItem);
         });
 
-        if(cutCities.length === 1){
-          $(".search-list li").removeClass('border')
+        if (cutCities.length === 1) {
+          $(".search-list li").removeClass("border");
         }
       }
-
     });
   });
 });
 // =============================================================
-
-
 
 $(".search-list").click(eventAndreturnCityName);
 

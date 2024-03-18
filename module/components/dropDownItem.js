@@ -1,8 +1,7 @@
 export function createListItem(allCountry) {
-  // TODO: preimenovati imena variabli na jasnija
-  const entries = Object.entries(allCountry);
+  const CreateEntries = Object.entries(allCountry);
 
-  let sortCountries = entries.sort((a, b) => {
+  let sortCountries = CreateEntries.sort((a, b) => {
     const aChars = a[1].split("");
     const bChars = b[1].split("");
 
@@ -42,5 +41,4 @@ export function createListItem(allCountry) {
   }
 
   return listItem;
-
 }

@@ -7,6 +7,7 @@
 */
 import { callApi } from "./callAPI.js";
 import { createListItem } from "./components/dropDownItem.js";
+import { forcastItem } from "./components/nextDaysItem.js";
 
 $(".home-Btn").click(() => location.reload());
 
@@ -147,158 +148,125 @@ $(".submitBtn").click(() => {
     alerts: "no",
   };
 
-
   const getWeather = callApi(
     "GET",
     "https://api.weatherapi.com/v1/forecast.json",
     ApiInfo
   );
-  // TODO: nije zavrsena obrada podataka iz Api-a
+
   getWeather.then((data) => {
     $(".searchLocation").val("");
     const countryFlagUrl = $(".country-flag").attr("src");
     const { country } = data.location;
     $(".nameCuntryAndCity img").attr({ src: countryFlagUrl, title: country });
-  });
 
-  $.ajax({
-    type: "GET",
-    url: "https://api.weatherapi.com/v1/forecast.json", // API has a limit of 3 days only
-    data: {
-      key: "78b424624d9c4ee2a9f75055231211",
-      q: searchLocation,
-      days: "5",
-      aqi: "no",
-      alerts: "no",
-    },
-    success: (response) => {
-      $(".searchLocation").val("");
-      
-  //  ========================================================
-      let prognoseAllDay = response.forecast.forecastday;
+    const { forecastday } = data.forecast;
 
-      let allDayInWeek = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
-      let allMounth = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
+    const DaysInWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const allMonths = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
 
-      prognoseAllDay.forEach((singleDay, index) => {
-        let date = new Date(singleDay.date);
-        if (index === 0) {
-          $(".date p").text(
-            `${allDayInWeek[date.getDay()]}, ${
-              allMounth[date.getMonth()]
-            } ${date.getDate()}, ${date.getFullYear()}`
-          );
-        }
+    forecastday.forEach((singleDay, index) => {
+      const { date } = singleDay;
+      const getDate = new Date(date);
+      const currentDay = DaysInWeek[getDate.getDay()],
+        currentMonth = allMonths[getDate.getMonth()],
+        currentDate = getDate.getDate(),
+        currentYear = getDate.getFullYear();
 
-        // Forecast for 3 days
-        $(".day-name").eq(index).text(allDayInWeek[date.getDay()]);
-        $(".day-prognose > p").eq(index).text(singleDay.day.condition.text);
-        $(".Max-temp")
-          .eq(index)
-          .html(`${Math.floor(singleDay.day.maxtemp_c)}&deg;c`);
-        $(".Min-temp")
-          .eq(index)
-          .html(`${Math.floor(singleDay.day.mintemp_c)}&deg;c`);
-      });
-      $(".day-img img").each((index, singleElement) => {
-        let dayTemp = $(".day-prognose > p").eq(index).text();
-        changeIcons(singleElement, dayTemp);
-      });
+      const displayCurrentDate = `${currentDay}, ${currentMonth} ${currentDate}, ${currentYear}`;
 
-      function changeIcons(element, value) {
-        switch (value) {
-          case "Sunny":
-            $(element).attr("src", "img/icons/Clear-Day.svg");
-            break;
+      if (index === 0) {
+        $(".date p").text(displayCurrentDate);
+      }
 
-          case "Patchy rain possible":
-          case "Moderate rain":
-            $(element).attr("src", "img/icons/Rain-Day.svg");
-            break;
+      const { text } = singleDay.day.condition;
+      const { maxtemp_c } = singleDay.day;
+      const { mintemp_c } = singleDay.day;
 
-          case "Partly cloudy":
-            $(element).attr("src", "img/icons/FewClouds-Day.svg");
-            break;
-          case "Heavy snow":
-          case "Patchy heavy snow":
-          case "Moderate snow":
-          case "Moderate or heavy snow showers":
-          case "Blowing snow":
-          case "Blizzard":
-          case "Light snow":
-          case "Light sleet":
-            $(element).attr("src", "img/icons/Snow-Day.svg");
-            break;
-          case "Cloudy":
-          case "Overcast":
-          case "Mist":
-          case "Partly Cloudy":
-            $(element).attr("src", "img/icons/Cloudy-Day.svg");
-            break;
-          case "Heavy rain":
-            $(element).attr("src", "img/icons/Storm-Day.svg");
+      const dayInfo = {
+        currentDay: currentDay,
+        forcast: text,
+        maxTemp: Math.floor(maxtemp_c),
+        minTemp: Math.floor(mintemp_c),
+        icon: ChangeIcon(text),
+      };
+
+      $(".all-Day").append(forcastItem(dayInfo));
+
+      function ChangeIcon(forcast) {
+        forcast = forcast.toLowerCase();
+        const cloudyWeather = ["cloudy", "mist", "overcast", "partly cloudy"];
+
+        if (forcast === "heavy rain") {
+          return "img/icons/Storm-Day.svg";
+        } else if (forcast.includes("rain")) {
+          return "img/icons/Rain-Day.svg";
+        } else if (forcast.includes(...cloudyWeather)) {
+          return "img/icons/Cloudy-Day.svg";
+        } else if (forcast.includes("snow") || forcast.includes("sleet")) {
+          return "img/icons/Snow-Day.svg";
+        } else if (forcast.includes("sun")) {
+          return "img/icons/Clear-Day.svg";
         }
       }
+
+      const [activeDay] = forecastday;
+      const { daily_chance_of_rain, maxwind_kph, avghumidity, uv } =
+        activeDay.day;
+
+      const weatherDetails = [
+        `${daily_chance_of_rain}%`,
+        `${Math.floor(maxwind_kph)}km/h`,
+        `${avghumidity}%`,
+        uv,
+      ];
       // Adding weather details
-      $(".temperature h2").each((index, singleElement) => {
-        switch (index) {
-          case 1:
-            $(singleElement).text(
-              `${prognoseAllDay[0].day.daily_chance_of_rain}%`
-            );
-            break;
-          case 2:
-            $(singleElement).text(
-              `${Math.floor(prognoseAllDay[0].day.maxwind_kph)}km/h`
-            );
-            break;
-          case 3:
-            $(singleElement).text(`${prognoseAllDay[0].day.avghumidity}%`);
-            break;
-          case 4:
-            $(singleElement).text(prognoseAllDay[0].day.uv);
-            break;
-        }
+      $.each(weatherDetails, function (index, value) {
+        $(".temperature h2:not(:first)").eq(index).text(value);
       });
 
+      // =========================================================
+      // FIXME: resi bug da elementi mogu budu postavljeni van petlje da se elementi ne ponavljanu
+
       // add time
-      let localTime = response.location.localtime;
-      localTime = localTime.split(" ");
-      $(".time").text(localTime[1]);
+      let { localtime } = data.location;
+      localtime = localtime.split(" ");
+      const [Date, Time] = localtime;
+      $(".time").text(Time);
 
       // add courrend forcast
-      $(".MaxAndMinTemp p:last").text(prognoseAllDay[0].day.condition.text);
+      $(".MaxAndMinTemp p:last").text(forecastday[0].day.condition.text);
 
       // add Temperature
-      let temperature = response.current.temp_c;
+      let temperature = data.current.temp_c;
       $(".temp h3, .temperature h2:first").html(
         `${Math.floor(temperature)}&deg;c`
       );
 
       // add max and min temp
-      let maxTemp = prognoseAllDay[0].day.maxtemp_c;
-      let minTemp = prognoseAllDay[0].day.mintemp_c;
+      let maxTemp = forecastday[0].day.maxtemp_c;
+      let minTemp = forecastday[0].day.mintemp_c;
 
       $(".MaxAndMinTemp p:first").html(
         `${Math.floor(maxTemp)}&deg;c / ${Math.floor(minTemp)}&deg;c`
@@ -306,10 +274,10 @@ $(".submitBtn").click(() => {
 
       // add name city and county
       $(".nameCuntryAndCity p").text(
-        `${response.location.name}/${response.location.country}`
+        `${data.location.name}/${data.location.country}`
       );
 
-      let time = response.location.localtime.slice(11).split(":")[0];
+      let time = data.location.localtime.slice(11).split(":")[0];
       changeBackground(
         ".cont2 img",
         $(".MaxAndMinTemp > p:last").text(),
@@ -441,6 +409,6 @@ $(".submitBtn").click(() => {
 
       $(".Card").addClass("fadeInRight");
       $(".detals, .days").addClass(" animate__fadeIn");
-    },
+    });
   });
 });

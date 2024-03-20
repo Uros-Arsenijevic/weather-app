@@ -23,7 +23,8 @@ export function createListItem(allCountry) {
     if (
       countryCode.length === 2 ||
       currentCountryCode === "eu" ||
-      currentCountryCode === "un"
+      currentCountryCode === "un" ||
+      currentCountryCode === 'aq'
     ) {
       continue;
     }

@@ -1,6 +1,7 @@
 import { callApi } from "./callAPI.js";
 import { createListItem } from "./components/dropDownItem.js";
 import { forcastItem } from "./components/nextDaysItem.js";
+import { changeBackground } from "./changeBackground.js";
 
 $(".home-Btn").click(() => location.reload());
 
@@ -258,130 +259,16 @@ $(".submitBtn").click(() => {
     const { name } = data.location; // location name
     $(".nameCuntryAndCity p").text(`${name} / ${country}`);
 
-    let time = data.location.localtime.slice(11).split(":")[0];
+    const currentForcast = $(".MaxAndMinTemp p:last").text();
 
+    const { icon, background } = changeBackground(currentForcast, Time);
 
-    // ===============================
-    changeBackground(".cont2 img", $(".MaxAndMinTemp > p:last").text(), Time);
-
-    function changeBackground(element, value, time) {
-      switch (value) {
-        case "Sunny":
-          if (time >= "6:00" && time <= "18:00") {
-            $(element).attr("src", "img/icons/Clear-Day.svg");
-            $(".background").css({
-              background: "url(img/Day-backround/2.png)",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            });
-          } else {
-            $(element).attr("src", "img/icons/Clear-Night.svg");
-            $(".background").css({
-              background: "url(img/Night-background/2.png)",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            });
-          }
-          break;
-
-        case "Patchy rain possible":
-        case "Moderate rain":
-          if (time >= "6:00" && time <= "18:00") {
-            $(element).attr("src", "img/icons/Rain-Day.svg");
-            $(".background").css({
-              background: "url(img/Day-backround/5.png)",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            });
-          } else {
-            $(element).attr("src", "img/icons/Rain-Night.svg");
-            $(".background").css({
-              background: "url(img/Night-background/5.png)",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            });
-          }
-          break;
-
-        case "Partly cloudy":
-          if (time >= "6:00" && time <= "18:00") {
-            $(element).attr("src", "img/icons/FewClouds-Day.svg");
-            $(".background").css({
-              background: "url(img/Day-backround/4.png)",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            });
-          } else {
-            $(element).attr("src", "img/icons/FewClouds-Night.svg");
-            $(".background").css({
-              background: "url(img/Night-background/4.png)",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            });
-          }
-          break;
-        case "Heavy snow":
-        case "Patchy heavy snow":
-        case "Moderate snow":
-        case "Moderate or heavy snow showers":
-        case "Blowing snow":
-        case "Blizzard":
-        case "Light snow":
-        case "Light sleet":
-          if (time >= "6:00" && time <= "18:00") {
-            $(element).attr("src", "img/icons/Snow-Day.svg");
-            $(".background").css({
-              background: "url(img/Day-backround/6.png)",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            });
-          } else {
-            $(element).attr("src", "img/icons/Snow-Night.svg");
-            $(".background").css({
-              background: "url(img/Night-background/6.png)",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            });
-          }
-          break;
-        case "Cloudy":
-        case "Overcast":
-        case "Mist":
-          if (time >= "6:00" && time <= "18:00") {
-            $(element).attr("src", "img/icons/Cloudy-Day.svg");
-            $(".background").css({
-              background: "url(img/Day-backround/3.png)",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            });
-          } else {
-            $(element).attr("src", "img/icons/Cloudy-Night.svg");
-            $(".background").css({
-              background: "url(img/Night-background/3.png)",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            });
-          }
-          break;
-        case "Heavy rain":
-          if (time >= "6:00" && time <= "18:00") {
-            $(element).attr("src", "img/icons/Storm-Day.svg");
-            $(".background").css({
-              background: "url(img/Day-backround/5.png)",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            });
-          } else {
-            $(element).attr("src", "img/icons/Storm-Night.svg");
-            $(".background").css({
-              background: "url(img/Night-background/5.png)",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            });
-          }
-          break;
-      }
-    }
+    $(".cont2 img").attr("src", `${icon}`);
+    $(".background").css({
+      background: `url(${background})`,
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "cover",
+    });
 
     $(".busca").hide();
     $("body").css("background", "var(--gray-900)");

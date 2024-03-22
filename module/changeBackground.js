@@ -16,7 +16,7 @@ const allForcast = [
     "Light snow",
     "Light sleet",
   ],
-  ["Cloudy", "Overcast", "Mist", "Partly cloudy",],
+  ["Cloudy", "Overcast", "Mist", "Partly Cloudy",],
   ["Heavy rain"],
 ];
 const forcastBackgrounds = new Map();
@@ -74,7 +74,6 @@ export function changeBackground(forcast, time) {
   const keys = [...forcastBackgrounds.keys()];
 
   const indexItem = keys.findIndex((item) => item.includes(forcast));
-
   const [day, night] = forcastBackgrounds.get(allForcast[indexItem]);
 
   if (time >= "06:00" && time <= "18:00") {

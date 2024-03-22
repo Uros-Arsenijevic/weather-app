@@ -3,6 +3,28 @@ import { createListItem } from "./components/dropDownItem.js";
 import { forcastItem } from "./components/nextDaysItem.js";
 import { changeBackground } from "./changeBackground.js";
 
+function showError(time) {
+  $("body").busyLoad("show", {
+    spinner: "circles",
+    background: "var(--blue-light)",
+  });
+  setTimeout(() => {
+    $(".busca").css("display", "none");
+    $(".error_container").css("display", "block");
+
+    $(".reload_message span").text(time);
+
+    const interval = setInterval(() => {
+      time--;
+      $(".reload_message span").text(time);
+      if (time === 0) {
+        clearInterval(interval);
+        location.reload();
+      }
+    }, 1000);
+  }, 2000);
+}
+
 $(".home-Btn").click(() => location.reload());
 
 $(".select-country").click(() => {
@@ -12,17 +34,21 @@ $(".select-country").click(() => {
 
 const getCountryCode = callApi("GET", "https://flagcdn.com/en/codes.json");
 
-getCountryCode.then((data) => {
-  const allCounty = createListItem(data);
-  allCounty.forEach((singleCountry) => {
-    $(".dropDown ol").append(singleCountry);
+getCountryCode
+  .then((data) => {
+    const allCounty = createListItem(data);
+    allCounty.forEach((singleCountry) => {
+      $(".dropDown ol").append(singleCountry);
+    });
+  })
+  .catch((error) => {
+    showError(10);
+  })
+  .finally(() => {
+    setTimeout(() => {
+      $.busyLoadFull("hide");
+    }, 2000);
   });
-
-  // shutdown loader
-  setTimeout(() => {
-    $.busyLoadFull("hide");
-  }, 2000);
-});
 
 // Loader
 $("body").busyLoad("show", {
@@ -147,134 +173,151 @@ $(".submitBtn").click(() => {
     ApiInfo
   );
 
-  getWeather.then((data) => {
-    $(".searchLocation").val("");
-    const countryFlagUrl = $(".country-flag").attr("src");
-    const { country } = data.location;
-    $(".nameCuntryAndCity img").attr({ src: countryFlagUrl, title: country });
+  const DAYS_IN_WEEK = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const MOUNTS = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
-    const { forecastday } = data.forecast;
+  getWeather
+    .then((data) => {
+      $("body").busyLoad("show", {
+        spinner: "circles",
+        background: "var(--blue-light)",
+      });
 
-    const DaysInWeek = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-    const allMonths = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    function ChangeIcon(forcast) {
-      forcast = forcast.toLowerCase();
-      const cloudyWeather = ["cloudy", "mist", "overcast", "partly cloudy"];
+      $(".searchLocation").val("");
+      const countryFlagUrl = $(".country-flag").attr("src");
+      const { country } = data.location;
+      $(".nameCuntryAndCity img").attr({ src: countryFlagUrl, title: country });
 
-      if (forcast === "heavy rain") {
-        return "img/icons/Storm-Day.svg";
-      } else if (forcast.includes("rain")) {
-        return "img/icons/Rain-Day.svg";
-      } else if (
-        forcast.includes(...cloudyWeather) ||
-        forcast.includes("fog")
-      ) {
-        return "img/icons/Cloudy-Day.svg";
-      } else if (forcast.includes("snow") || forcast.includes("sleet")) {
-        return "img/icons/Snow-Day.svg";
-      } else if (forcast.includes("sun")) {
-        return "img/icons/Clear-Day.svg";
-      }
-    }
+      const { forecastday } = data.forecast;
 
-    forecastday.forEach((singleDay, index) => {
-      const { date } = singleDay;
-      const getDate = new Date(date);
-      const currentDay = DaysInWeek[getDate.getDay()],
-        currentMonth = allMonths[getDate.getMonth()],
-        currentDate = getDate.getDate(),
-        currentYear = getDate.getFullYear();
+      function ChangeIcon(forcast) {
+        forcast = forcast.toLowerCase();
+        const cloudyWeather = ["cloudy", "mist", "overcast", "partly cloudy"];
 
-      const displayCurrentDate = `${currentDay}, ${currentMonth} ${currentDate}, ${currentYear}`;
-
-      const { text } = singleDay.day.condition;
-      const { maxtemp_c, mintemp_c } = singleDay.day;
-
-      if (index === 0) {
-        $(".date p").text(displayCurrentDate);
-        $(".MaxAndMinTemp p:first").html(
-          `${Math.floor(maxtemp_c)}&deg;c / ${Math.floor(mintemp_c)}&deg;c`
-        );
-        $(".MaxAndMinTemp p:last").text(text);
+        if (forcast === "heavy rain") {
+          return "img/icons/Storm-Day.svg";
+        } else if (forcast.includes("rain")) {
+          return "img/icons/Rain-Day.svg";
+        } else if (
+          forcast.includes(...cloudyWeather) ||
+          forcast.includes("fog")
+        ) {
+          return "img/icons/Cloudy-Day.svg";
+        } else if (forcast.includes("snow") || forcast.includes("sleet")) {
+          return "img/icons/Snow-Day.svg";
+        } else if (forcast.includes("sun")) {
+          return "img/icons/Clear-Day.svg";
+        }
       }
 
-      const dayInfo = {
-        currentDay: currentDay,
-        forcast: text,
-        maxTemp: Math.floor(maxtemp_c),
-        minTemp: Math.floor(mintemp_c),
-        icon: ChangeIcon(text),
-      };
+      forecastday.forEach((singleDay, index) => {
+        const { date } = singleDay;
+        const getDate = new Date(date);
+        const currentDay = DAYS_IN_WEEK[getDate.getDay()],
+          currentMonth = MOUNTS[getDate.getMonth()],
+          currentDate = getDate.getDate(),
+          currentYear = getDate.getFullYear();
 
-      $(".all-Day").append(forcastItem(dayInfo));
+        const displayCurrentDate = `${currentDay}, ${currentMonth} ${currentDate}, ${currentYear}`;
+
+        const { text } = singleDay.day.condition;
+        const { maxtemp_c, mintemp_c } = singleDay.day;
+
+        if (index === 0) {
+          $(".date p").text(displayCurrentDate);
+          $(".MaxAndMinTemp p:first").html(
+            `${Math.floor(maxtemp_c)}&deg;c / ${Math.floor(mintemp_c)}&deg;c`
+          );
+          $(".MaxAndMinTemp p:last").text(text);
+        }
+
+        const dayInfo = {
+          currentDay: currentDay,
+          forcast: text,
+          maxTemp: Math.floor(maxtemp_c),
+          minTemp: Math.floor(mintemp_c),
+          icon: ChangeIcon(text),
+        };
+
+        $(".all-Day").append(forcastItem(dayInfo));
+      });
+
+      const [activeDay] = forecastday;
+      const { daily_chance_of_rain, maxwind_kph, avghumidity, uv } =
+        activeDay.day;
+
+      const weatherDetails = [
+        `${daily_chance_of_rain}%`,
+        `${Math.floor(maxwind_kph)}km/h`,
+        `${avghumidity}%`,
+        uv,
+      ];
+      // Adding weather details
+      weatherDetails.forEach((value, index) => {
+        $(".temperature h2:not(:first)").eq(index).text(value);
+      });
+
+      // add time
+      let { localtime } = data.location;
+      localtime = localtime.split(" ");
+      const [locationDate, Time] = localtime;
+      $(".time").text(Time);
+
+      // add Temperature
+      const { temp_c } = data.current;
+      $(".temp h3, .temperature h2:first").html(`${Math.floor(temp_c)}&deg;c`);
+
+      // add name city and county
+      const { name } = data.location; // location name
+      $(".nameCuntryAndCity p").text(`${name} / ${country}`);
+
+      let currentForcast = $(".MaxAndMinTemp p:last").text().trim();
+
+      const { icon, background } = changeBackground(currentForcast, Time);
+
+      $(".cont2 img").attr("src", `${icon}`);
+      $(".background").css({
+        background: `url(${background})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      });
+
+      setTimeout(() => {
+        $(".busca").hide();
+        $("body").css("background", "var(--gray-900)");
+        $(".Dash").css({ display: "flex" });
+
+        $(".Card").addClass("fadeInRight");
+        $(".detals, .days").addClass(" animate__fadeIn");
+      }, 2000);
+    })
+    .catch((error) => {
+      showError(10);
+    })
+    .finally(() => {
+      setTimeout(() => {
+        $.busyLoadFull("hide");
+      }, 2000);
     });
-
-    const [activeDay] = forecastday;
-    const { daily_chance_of_rain, maxwind_kph, avghumidity, uv } =
-      activeDay.day;
-
-    const weatherDetails = [
-      `${daily_chance_of_rain}%`,
-      `${Math.floor(maxwind_kph)}km/h`,
-      `${avghumidity}%`,
-      uv,
-    ];
-    // Adding weather details
-    weatherDetails.forEach((value, index) => {
-      $(".temperature h2:not(:first)").eq(index).text(value);
-    });
-
-    // add time
-    let { localtime } = data.location;
-    localtime = localtime.split(" ");
-    const [locationDate, Time] = localtime;
-    $(".time").text(Time);
-
-    // add Temperature
-    const { temp_c } = data.current;
-    $(".temp h3, .temperature h2:first").html(`${Math.floor(temp_c)}&deg;c`);
-
-    // add name city and county
-    const { name } = data.location; // location name
-    $(".nameCuntryAndCity p").text(`${name} / ${country}`);
-
-    const currentForcast = $(".MaxAndMinTemp p:last").text();
-
-    const { icon, background } = changeBackground(currentForcast, Time);
-
-    $(".cont2 img").attr("src", `${icon}`);
-    $(".background").css({
-      background: `url(${background})`,
-      backgroundRepeat: "no-repeat",
-      backgroundSize: "cover",
-    });
-
-    $(".busca").hide();
-    $("body").css("background", "var(--gray-900)");
-    $(".Dash").css({ display: "flex" });
-
-    $(".Card").addClass("fadeInRight");
-    $(".detals, .days").addClass(" animate__fadeIn");
-  });
 });

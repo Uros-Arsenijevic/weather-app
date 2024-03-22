@@ -8,7 +8,7 @@ export function callApi(method, URL, data = null){
         resolve(response);
       },
       error: (error) => {
-        reject('desila se greska')
+        reject('Error')
       }
     });
   })

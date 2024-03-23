@@ -321,3 +321,39 @@ $(".submitBtn").click(() => {
       }, 2000);
     });
 });
+
+// Dark mode
+$(".toggle").click(() => {
+  const isChecked = $("input[type=checkbox]").is(":checked");
+  let darkModeIsActive = true;
+
+  if (isChecked && darkModeIsActive) {
+    $(".Card, .weather-info > div").css("--gray-800", "#dadae4");
+    $("body").css("backgroundColor", "#f7f7f9");
+    $(".home-Btn").css("backgroundColor", "#eaeaf0");
+    $(".detals-item li:not(:last-child)").css("--gray-700", "#cbcbd9");
+    $(".heddiong, .temperature h2, .day-name, .day-prognose > p").css(
+      "color",
+      "var(--gray-500)"
+    );
+    $(".all-Day > .Day:first").css("backgroundColor", "var(--gray-200)");
+    $(".Max-temp").css("color", "var(--gray-100)");
+
+    darkModeIsActive = false;
+  } else {
+    $(".Card, .weather-info > div").css("--gray-800", "#16161f");
+    $("body").css("backgroundColor", "var(--gray-900)");
+    $(".detals-item li:not(:last-child)").css("--gray-700", "#1c1c27");
+    $(".heddiong, .temperature h2, .day-name, .day-prognose > p").css(
+      "color",
+      "var(--gray-200)"
+    );
+    $(".all-Day > .Day:first").css("backgroundColor", "var(--gray-700)");
+    $(".Max-temp").css("color", "var(--gray-200)");
+    $(".home-Btn").css("backgroundColor", "var(--gray-600)");
+
+    darkModeIsActive = true;
+  }
+
+  localStorage.setItem('darkMode', darkModeIsActive);
+});

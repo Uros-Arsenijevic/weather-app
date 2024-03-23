@@ -10,6 +10,7 @@ export function forcastItem(obj) {
       <p>${forcast}</p>
       <div class="minAndMaxTemp">
           <p class="Max-temp">${maxTemp}&deg;c</p>
+          /
           <p class="Min-temp">${minTemp}&deg;c</p>
       </div>
     </div>

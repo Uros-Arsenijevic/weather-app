@@ -643,9 +643,6 @@ nav .home-Btn:hover {
   justify-content: center;
   user-select: none;
 }
-.Day:hover {
-  background-color: var(--gray-700);
-}
 .Day:first-child {
   background-color: var(--gray-700);
 }
@@ -668,9 +665,18 @@ nav .home-Btn:hover {
   line-height: 140%;
   text-align: center;
 }
+.temperature h2 {
+  font-weight: bold;
+}
+
 .day-img img {
   width: 150px;
   height: 150px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
 }
 .minAndMaxTemp {
   display: flex;
